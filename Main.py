@@ -178,6 +178,12 @@ def modul_hinzufuegen(studium: Studium):
     clear()
     print('Neues Modul erstellen')
     kuerzel = input('Kürzel: ')
+
+    # Überprüfung, ob es bereits ein Modul mit dem gewünschtem Kürzel gibt
+    if studium.get_modul(kuerzel=kuerzel) is not None:
+        input(f'Ein Modul mit dem Kürzel "{kuerzel}" existiert bereits. [OK]')
+        return
+
     name = input('Name: ')
     etcs = input('ETCs: ')
 
