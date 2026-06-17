@@ -1,0 +1,363 @@
+from datetime import date
+import sys
+
+from Studium import Studium
+from Semester import Semester
+from Modul import Modul
+from Pruefung import Pruefung
+from Datenbank import Datenbank
+from Diagramm import Diagramm
+
+
+def clear():
+    sys.stdout.write('\033[2J\033[H') # ANSI-Escape-Code zum Bildschirm leeren und Cursor an den Anfang setzen
+    sys.stdout.flush()
+
+def moduluebersicht(studium: Studium):
+    clear()
+    for semester in studium.semester:
+        print(f'Semester {semester.nummer}:')
+        for modul in semester.module:
+            print(modul)
+
+
+def studium_laden_oder_erstellen() -> Studium:
+    with Datenbank() as db:
+        ergebnis = db.studium_laden()
+
+    # Kein Studium in der Datenbank gefunden, neues erstellen
+    if ergebnis is None:
+        studiengang = input('Kein Studium gefunden. Um ein neues zu erstellen, Name des Studienganges eingeben: ')
+        hochschule = input('Hochschule: ')
+
+        while True:
+            start_datum = input('Startdatum: ')
+            try:
+                start_datum = date.strptime(start_datum, '%d.%m.%Y')
+                break
+            except ValueError:
+                print('Ungültiges Datum.')
+
+        while True:
+            geplantes_end_datum = input('Geplantes Enddatum: ')
+            try:
+                geplantes_end_datum = date.strptime(geplantes_end_datum, '%d.%m.%Y')
+                break
+            except ValueError:
+                print('Ungültiges Datum.')
+
+        # Studium erstellen
+        studium = Studium(id=1, studiengang=studiengang, hochschule=hochschule, start_datum=start_datum, geplantes_end_datum=geplantes_end_datum)
+        with Datenbank() as db:
+            db.studium_erstellen(studium)
+        return studium
+
+    # Bestehendes Studium aus der Datenbank laden
+    return Studium(id=ergebnis['id'], studiengang=ergebnis['studiengang'], hochschule=ergebnis['hochschule'], start_datum=date.strptime(ergebnis['start_datum'], '%Y-%m-%d'), geplantes_end_datum=date.strptime(ergebnis['geplantes_end_datum'], '%Y-%m-%d'))
+
+
+def studiengang_aendern(studium: Studium):
+    clear()
+    studiengang = input('Name des neuen Studienganges: ')
+
+    studium.studiengang = studiengang
+    input(f'Studiengang zu "{studiengang}" geändert. [OK]')
+
+    with Datenbank() as db:
+        db.studium_aendern(studium)
+
+
+def hochschule_aendern(studium: Studium):
+    clear()
+    hochschule = input('Name der neuen Hochschule: ')
+
+    studium.hochschule = hochschule
+    input(f'Hochschule zu "{hochschule}" geändert. [OK]')
+
+    with Datenbank() as db:
+        db.studium_aendern(studium)
+
+
+def startdatum_aendern(studium: Studium):
+    clear()
+    start_datum = input('Neues Startdatum eingeben: ')
+
+    try:
+        start_datum = date.strptime(start_datum, '%d.%m.%Y')
+    except ValueError:
+        input('Ungültiges Datum. [OK]')
+        return
+
+    studium.start_datum = start_datum
+    input(f'Startdatum zum {start_datum.strftime('%d.%m.%Y')} geändert. [OK]')
+
+    with Datenbank() as db:
+        db.studium_aendern(studium)
+
+
+def enddatum_aendern(studium: Studium):
+    clear()
+    end_datum = input('Neues Enddatum eingeben: ')
+
+    try:
+        end_datum = date.strptime(end_datum, '%d.%m.%Y')
+    except ValueError:
+        input('Ungültiges Datum. [OK]')
+        return
+
+    studium.geplantes_end_datum = end_datum
+    input(f'Enddatum zum {end_datum.strftime('%d.%m.%Y')} geändert. [OK]')
+
+    with Datenbank() as db:
+        db.studium_aendern(studium)
+
+
+def semester_hinzufuegen(studium: Studium):
+    try:
+        nummer = int(input('Semesternummer eingeben: '))
+    except ValueError:
+        input('Ungültige Nummer. [OK]')
+        return
+
+    # Neues Semester nur erstellen, wenn es noch keines mit der eingegebenen Nummer gibt
+    if studium.get_semester(nummer) is not None:
+        input(f'Es gibt bereits in Semester mit der Nummer {nummer}. [OK]')
+        return
+
+    with Datenbank() as db:
+        naechste_id = db.naechste_id_finden('semester')
+
+    semester = Semester(id=naechste_id, nummer=nummer)
+    studium.semester_hinzufuegen(semester=semester)
+
+    with Datenbank() as db:
+        db.semester_erstellen(studium=studium, semester=semester)
+
+
+def semester_loeschen(studium: Studium):
+    try:
+        nummer = int(input('Semesternummer eingeben: '))
+    except ValueError:
+        input('Ungültige Nummer. [OK]')
+        return
+
+    studium.semester_entfernen(nummer=nummer)
+
+    with Datenbank() as db:
+        db.semester_loeschen(nummer=nummer)
+
+
+def modul_hinzufuegen(studium: Studium):
+    clear()
+    print('Neues Modul erstellen')
+    kuerzel = input('Kürzel: ')
+    name = input('Name: ')
+    etcs = input('ETCs: ')
+
+    try:
+        etcs = int(etcs)
+    except ValueError:
+        input('Ungültige ETCs. [OK]')
+        return
+
+    with Datenbank() as db:
+        naechste_id = db.naechste_id_finden('semester')
+
+    neues_modul = Modul(id=naechste_id, kuerzel=kuerzel, name=name, etcs=etcs)
+
+    print('\nNummer eingeben, zu welchem Semester das Modul hinzugefügt werden soll: ')
+    for semester in studium.semester:
+        print(f'{semester}')
+
+    try:
+        gewaeltes_semester = int(input())
+    except ValueError:
+        input('Ungültige Nummer. [OK]')
+        return
+
+    if studium.get_semester(nummer=gewaeltes_semester) is None:
+        input('Gewähltes Semester existiert nicht. [OK]')
+        return
+
+    semester = studium.get_semester(nummer=gewaeltes_semester)
+    semester.modul_hinzufuegen(modul=neues_modul)
+
+    with Datenbank() as db:
+        db.modul_erstellen(semester=semester, modul=neues_modul)
+
+
+def modul_loeschen(studium: Studium):
+    moduluebersicht(studium=studium)
+
+    kuerzel = input('\nKürzel des zu löschenden Moduls eingeben: ')
+    ergebnis = studium.get_modul(kuerzel=kuerzel)
+
+    if ergebnis is None:
+        input(f'Kein Modul mit dem Kürzel "{kuerzel}" gefunden. [OK]')
+        return
+
+    semester, modul = ergebnis
+    semester.modul_entfernen(kuerzel=kuerzel)
+
+    input(f'{modul} wurde entfernt. [OK]')
+
+    with Datenbank() as db:
+        db.modul_loeschen(modul=modul)
+
+
+def pruefung_hinzufuegen(studium: Studium):
+    moduluebersicht(studium=studium)
+
+    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem eine Prüfung hinzugefügt werden soll: ')
+    ergebnis = studium.get_modul(kuerzel=kuerzel)
+
+    if ergebnis is None:
+        input(f'Kein Modul mit dem Kürzel "{kuerzel}" gefunden. [OK]')
+        return
+
+    semester, modul = ergebnis
+
+    if modul.ist_bewertet():
+        input('Dieses Modul ist bereits bewertet. [OK]')
+        return
+
+    note = input('Note: ')
+
+    try:
+        note = float(note)
+    except ValueError:
+        input('Ungültige Note. [OK]')
+        return
+
+
+    pruefung = Pruefung(note=note)
+    modul.pruefung_hinzufuegen(pruefung=pruefung)
+
+    with Datenbank() as db:
+        db.pruefung_hinzufuegen(modul=modul, pruefung=pruefung)
+
+
+def pruefung_loeschen(studium: Studium):
+    moduluebersicht(studium=studium)
+
+    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem die Prüfung gelöscht werden soll: ')
+    ergebnis = studium.get_modul(kuerzel=kuerzel)
+
+    if ergebnis is None:
+        input(f'Kein Modul mit dem Kürzel "{kuerzel}" gefunden. [OK]')
+        return
+
+    semester, modul = ergebnis
+    modul.pruefung_entfernen()
+    input(f'Prüfung von Modul {modul.kuerzel} wurde entfernt. [OK]')
+
+    with Datenbank() as db:
+        db.pruefung_loeschen(modul=modul)
+
+
+def main():
+    studium = studium_laden_oder_erstellen()
+
+    # Semester aus Datenbank laden und zu Studium hinzufügen (Komposition)
+    with Datenbank() as db:
+        for semester in db.semester_laden():
+            neues_semester = Semester(id=semester['id'], nummer=semester['nummer'])
+            studium.semester_hinzufuegen(semester=neues_semester)
+
+            # Module aus Datenbank laden und zu Semester hinzufügen (Komposition)
+            with Datenbank() as db2:
+                for modul in db2.modul_laden(semester=neues_semester):
+                    neues_modul = Modul(id=modul['id'], kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
+                    neues_semester.modul_hinzufuegen(modul=neues_modul)
+
+                    # Prüfungen aus Datenkbank laden und zu Modul zuweisen (Aggregation)
+                    with Datenbank() as db3:
+                        pruefung = db3.pruefung_laden(modul=neues_modul)
+                        for pruefung in db3.pruefung_laden(modul=neues_modul):
+                            neue_pruefung = Pruefung(note=pruefung['note'])
+                            neues_modul.pruefung_hinzufuegen(pruefung=neue_pruefung)
+
+    i = ''
+    while i != '0':
+        clear()
+        print(studium)
+        print('\n[1] - Studium bearbeiten')
+        print('[2] - Semester verwalten')
+        print('[3] - Module verwalten')
+        print('[4] - Prüfungen verwalten')
+        print('[5] - Notenübersicht öffnen')
+        print('[0] - Beenden\n')
+        i = input()
+
+        if i == '1': # Studium bearbeiten
+            j = ''
+            while j != '0':
+                clear()
+                print(studium)
+                print('\n[1] - Studiengang ändern')
+                print('[2] - Hochschule ändern')
+                print('[3] - Startdatum ändern')
+                print('[4] - Enddatum ändern')
+                print('[0] - Zurück\n')
+                j = input()
+
+                if j == '1': # Studiengang ändern
+                    studiengang_aendern(studium=studium)
+                elif j == '2': # Hochschule ändern
+                    hochschule_aendern(studium=studium)
+                elif j == '3': # Startdatum ändern
+                    startdatum_aendern(studium=studium)
+                elif j == '4': # Enddatum ändern
+                    enddatum_aendern(studium=studium)
+
+        elif i == '2': # Semester verwalten
+            j = ''
+            while j != '0':
+                clear()
+                for semester in studium.semester:
+                    print(semester)
+
+                print('\n[1] - Semester hinzufügen')
+                print('[2] - Semester löschen')
+                print('[0] - Zurück\n')
+                j = input()
+
+                if j == '1': # Semester hinzufügen
+                    semester_hinzufuegen(studium=studium)
+                elif j == '2': # Semester löschen
+                    semester_loeschen(studium=studium)
+
+        elif i == '3': # Module verwalten
+            j = ''
+            while j != '0':
+                moduluebersicht(studium=studium)
+                print('\n[1] - Modul hinzufügen')
+                print('[2] - Modul löschen')
+                print('[0] - Zurück\n')
+                j = input()
+
+                if j == '1': # Modul hinzufügen
+                    modul_hinzufuegen(studium=studium)
+                elif j == '2': # Modul löschen
+                    modul_loeschen(studium=studium)
+
+        elif i == '4': # Prüfungen verwalten
+            j = ''
+            while j != '0':
+                moduluebersicht(studium=studium)
+                print('\n[1] - Prüfung hinzufügen')
+                print('[2] - Prüfung löschen')
+                print('[0] - Zurück\n')
+                j = input()
+
+                if j == '1': # Prüfung hinzufügen
+                    pruefung_hinzufuegen(studium=studium)
+                elif j == '2': # Prüfung löschen
+                    pruefung_loeschen(studium=studium)
+
+        elif i == '5': # Notenübersicht
+            #Diagramm.gesamten_notenverlauf_zeichnen(studium)
+            diagramm = Diagramm(studium=studium)
+            diagramm.notenuebersicht()
+
+main()
