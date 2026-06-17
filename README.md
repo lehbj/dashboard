@@ -18,7 +18,7 @@ Der Notenverlauf kann als Diagramm visualisiert werden.
 ### 1. Repository klonen
 
 ```bash
-git clone https://github.com/benutzername/studiumsverwaltung.git
+git clone https://github.com/lehbj/dashboard.git
 cd studiumsverwaltung
 ```
 
