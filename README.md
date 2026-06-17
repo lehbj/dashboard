@@ -19,7 +19,7 @@ Der Notenverlauf kann als Diagramm visualisiert werden.
 
 ```bash
 git clone https://github.com/lehbj/dashboard.git
-cd studiumsverwaltung
+cd dashboard
 ```
 
 ### 2. Abhängigkeiten installieren
