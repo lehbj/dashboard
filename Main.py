@@ -360,4 +360,5 @@ def main():
             diagramm = Diagramm(studium=studium)
             diagramm.notenuebersicht()
 
-main()
+if __name__ == '__main__':
+    main()
