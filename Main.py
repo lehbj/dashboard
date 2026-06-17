@@ -31,7 +31,7 @@ def studium_laden_oder_erstellen() -> Studium:
         hochschule = input('Hochschule: ')
 
         while True:
-            start_datum = input('Startdatum: ')
+            start_datum = input('Startdatum (TT.MM.JJJJ): ')
             try:
                 start_datum = date.strptime(start_datum, '%d.%m.%Y')
                 break
@@ -39,7 +39,7 @@ def studium_laden_oder_erstellen() -> Studium:
                 print('Ungültiges Datum.')
 
         while True:
-            geplantes_end_datum = input('Geplantes Enddatum: ')
+            geplantes_end_datum = input('Geplantes Enddatum (TT.MM.JJJJ): ')
             try:
                 geplantes_end_datum = date.strptime(geplantes_end_datum, '%d.%m.%Y')
                 break
@@ -80,7 +80,7 @@ def hochschule_aendern(studium: Studium):
 
 def startdatum_aendern(studium: Studium):
     clear()
-    start_datum = input('Neues Startdatum eingeben: ')
+    start_datum = input('Neues Startdatum eingeben (TT.MM.JJJJ): ')
 
     try:
         start_datum = date.strptime(start_datum, '%d.%m.%Y')
@@ -97,7 +97,7 @@ def startdatum_aendern(studium: Studium):
 
 def enddatum_aendern(studium: Studium):
     clear()
-    end_datum = input('Neues Enddatum eingeben: ')
+    end_datum = input('Neues Enddatum eingeben (TT.MM.JJJJ): ')
 
     try:
         end_datum = date.strptime(end_datum, '%d.%m.%Y')
