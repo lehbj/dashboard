@@ -160,11 +160,17 @@ def semester_loeschen(studium: Studium):
         input('Ungültige Nummer. [OK]')
         return
 
+    if studium.get_semester(nummer=nummer) is None:
+        input(f'Kein Semester mit der Nummer {nummer} gefunden. [OK]')
+        return
+
     studium.semester_entfernen(nummer=nummer)
 
     # Aus Datenbank löschen
     with Datenbank() as db:
         db.semester_loeschen(nummer=nummer)
+
+    input(f'Semester mit der Nummer {nummer} wurde gelöscht.')
 
 
 def modul_hinzufuegen(studium: Studium):
