@@ -288,6 +288,12 @@ def pruefung_loeschen(studium: Studium):
         return
 
     semester, modul = ergebnis
+
+    # Bewertung nur löschen wenn Modul bewertet ist
+    if not modul.ist_bewertet():
+        input(f'Prüfung konnte nicht gelöscht werden. Das Modul mit dem Kürzel "{kuerzel}" ist noch nicht bewertet worden. [OK]')
+        return
+
     modul.pruefung_entfernen()
     input(f'Prüfung von Modul {modul.kuerzel} wurde entfernt. [OK]')
 
