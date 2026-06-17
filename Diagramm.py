@@ -9,18 +9,20 @@ class Diagramm:
 
     @staticmethod
     def _notenfarbe(note: float) -> str:
+        """Gibt je nach Note eine entsprechende Farbe zurück"""
         if note <= 1.5:
-            return '#2ecc71'  # Grün
+            return '#2ecc71' # Grün
         elif note <= 2.5:
-            return '#3498db'  # Blau
+            return '#3498db' # Blau
         elif note <= 3.5:
-            return '#f39c12'  # Orange
+            return '#f39c12' # Orange
         elif note <= 4.0:
-            return '#e67e22'  # Dunkelorange
+            return '#e67e22' # Dunkelorange
         else:
-            return '#e74c3c'  # Rot
+            return '#e74c3c' # Rot
 
     def notenuebersicht(self) -> None:
+        """Notendiagramm erstellen und anzeigen"""
         semester_labels = []
         durchschnittsnoten = []
         farben = []

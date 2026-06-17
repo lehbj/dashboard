@@ -22,6 +22,7 @@ class Datenbank:
         self._connection.close()
 
     def _tabellen_erstellen(self) -> None:
+        """Erstellt Tabellen in Datenbank, falls diese noch nicht existieren"""
         with self._connection:
             self._connection.executescript('CREATE TABLE IF NOT EXISTS studium(id INTEGER PRIMARY KEY AUTOINCREMENT, studiengang TEXT NOT NULL, hochschule TEXT NOT NULL, start_datum date NOT NULL, geplantes_end_datum date NOT NULL);')
             self._connection.executescript('CREATE TABLE IF NOT EXISTS semester (id INTEGER PRIMARY KEY AUTOINCREMENT, studium_id INTEGER NOT NULL, nummer INTEGER NOT NULL, FOREIGN KEY (studium_id) REFERENCES studium(id) ON DELETE CASCADE);')

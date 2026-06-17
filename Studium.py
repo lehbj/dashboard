@@ -58,6 +58,7 @@ class Studium:
         self._semester.append(semester)
 
     def semester_entfernen(self, nummer: int) -> None:
+        """Löscht ein Semester nach Nummer wenn es existiert"""
         self._semester = [s for s in self._semester if s.nummer != nummer]
 
     def get_semester(self, nummer: int) -> Optional[Semester]:

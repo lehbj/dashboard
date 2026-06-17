@@ -53,6 +53,7 @@ class Modul:
         return self._pruefung is not None
 
     def ist_bestanden(self) -> bool:
+        """Modul gilt als bestanden, wenn die Note besser als 4,0 ist"""
         if self.ist_bewertet():
             return self.get_note() <= 4.0
         return False
