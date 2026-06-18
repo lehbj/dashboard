@@ -177,7 +177,7 @@ def modul_hinzufuegen(studium: Studium):
     """Neues Modul mit gewünschten Eigenschaft wird erstellt"""
     clear()
     print('Neues Modul erstellen')
-    kuerzel = input('Kürzel: ')
+    kuerzel = input('Kürzel: ').upper()
 
     # Überprüfung, ob es bereits ein Modul mit dem gewünschtem Kürzel gibt
     if studium.get_modul(kuerzel=kuerzel) is not None:
@@ -225,7 +225,7 @@ def modul_loeschen(studium: Studium):
     """Modul mit gewünschten Kürzel löschen"""
     moduluebersicht(studium=studium)
 
-    kuerzel = input('\nKürzel des zu löschenden Moduls eingeben: ')
+    kuerzel = input('\nKürzel des zu löschenden Moduls eingeben: ').upper()
     ergebnis = studium.get_modul(kuerzel=kuerzel)
 
     if ergebnis is None:
@@ -246,7 +246,7 @@ def pruefung_hinzufuegen(studium: Studium):
     """Prüfungsergebnis zu Modul hinzufügen"""
     moduluebersicht(studium=studium)
 
-    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem eine Prüfung hinzugefügt werden soll: ')
+    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem eine Prüfung hinzugefügt werden soll: ').upper()
 
     # Modul mit eingegebenen Kürzel suchen
     ergebnis = studium.get_modul(kuerzel=kuerzel)
@@ -280,7 +280,7 @@ def pruefung_loeschen(studium: Studium):
     """Prüfung von Modul mit gewünschtem Kürzel löschen"""
     moduluebersicht(studium=studium)
 
-    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem die Prüfung gelöscht werden soll: ')
+    kuerzel = input('\nKürzel des Moduls eingeben, bei welchem die Prüfung gelöscht werden soll: ').upper()
     ergebnis = studium.get_modul(kuerzel=kuerzel)
 
     if ergebnis is None:
