@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import numpy
 
 from Studium import Studium
 
