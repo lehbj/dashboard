@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy
 
 from Studium import Studium
 
@@ -41,13 +42,16 @@ class Diagramm:
             return
 
         fig, ax = plt.subplots(figsize=(10, 5))
-        x = range(1, len(semester_labels) + 1)
 
         # Linie zeichnen
-        ax.plot(x, durchschnittsnoten, linewidth=2.5, color='#000000')
+        ax.plot(range(len(semester_labels)), durchschnittsnoten, linewidth=2.5, color='#000000')
+
+        # Semester auf x-Achse
+        ax.set_xticks(range(len(semester_labels)))
+        ax.set_xticklabels(semester_labels)
 
         # Datenpunkte
-        for xi, (yi, farbe) in enumerate(zip(durchschnittsnoten, farben), start=1):
+        for xi, (yi, farbe) in enumerate(zip(durchschnittsnoten, farben)):
             ax.scatter(xi, yi, color=farbe, s=100, zorder=3)
 
             # Beschriftung Punkte
