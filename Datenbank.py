@@ -55,7 +55,7 @@ class Datenbank:
 
     def semester_laden(self) -> Optional[list[Semester]]:
         with self._connection:
-            return self._connection.execute('SELECT * FROM semester').fetchall()
+            return self._connection.execute('SELECT * FROM semester ORDER BY nummer').fetchall()
 
     def semester_erstellen(self, studium: Studium, semester: Semester) -> None:
         with self._connection:
