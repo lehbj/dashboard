@@ -195,7 +195,7 @@ def modul_hinzufuegen(studium: Studium):
 
     # Nächste freie ID aus Datenbank suchen
     with Datenbank() as db:
-        naechste_id = db.naechste_id_finden('semester')
+        naechste_id = db.naechste_id_finden('modul')
 
     neues_modul = Modul(id=naechste_id, kuerzel=kuerzel, name=name, etcs=etcs)
 
