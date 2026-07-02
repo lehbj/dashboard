@@ -45,7 +45,7 @@ class Datenbank:
         with self._connection:
             return self._connection.execute('SELECT * FROM semester ORDER BY nummer').fetchall()
 
-    def semester_erstellen(self,  semester: Semester) -> None:
+    def semester_erstellen(self, semester: Semester) -> None:
         with self._connection:
             self._connection.execute(f'INSERT INTO semester (studium_id, nummer) VALUES (1, "{semester.nummer}");')
 
