@@ -145,7 +145,7 @@ def semester_hinzufuegen(studium: Studium):
 
     # Semester in Datenbank hinzufügen
     with Datenbank() as db:
-        db.semester_erstellen(studium=studium, semester=semester)
+        db.semester_erstellen(semester=semester)
 
 
 def semester_loeschen(studium: Studium):
