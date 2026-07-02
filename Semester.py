@@ -4,14 +4,9 @@ from Modul import Modul
 
 
 class Semester:
-    def __init__(self, id: int, nummer: int):
-        self._id: int = id
+    def __init__(self, nummer: int):
         self._nummer: int = nummer
         self._module: list[Modul] = [] # Komposition
-
-    @property
-    def id(self) -> int:
-        return self._id
 
     @property
     def nummer(self) -> int:

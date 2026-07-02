@@ -54,13 +54,13 @@ def studium_laden_oder_erstellen() -> Studium:
                 print('Ungültiges Datum.')
 
         # Studium erstellen
-        studium = Studium(id=1, studiengang=studiengang, hochschule=hochschule, start_datum=start_datum, geplantes_end_datum=geplantes_end_datum)
+        studium = Studium(studiengang=studiengang, hochschule=hochschule, start_datum=start_datum, geplantes_end_datum=geplantes_end_datum)
         with Datenbank() as db:
             db.studium_erstellen(studium)
         return studium
 
     # Bestehendes Studium aus der Datenbank laden
-    return Studium(id=ergebnis['id'], studiengang=ergebnis['studiengang'], hochschule=ergebnis['hochschule'], start_datum=date.strptime(ergebnis['start_datum'], '%Y-%m-%d'), geplantes_end_datum=date.strptime(ergebnis['geplantes_end_datum'], '%Y-%m-%d'))
+    return Studium(studiengang=ergebnis['studiengang'], hochschule=ergebnis['hochschule'], start_datum=date.strptime(ergebnis['start_datum'], '%Y-%m-%d'), geplantes_end_datum=date.strptime(ergebnis['geplantes_end_datum'], '%Y-%m-%d'))
 
 
 def studiengang_aendern(studium: Studium):
@@ -140,11 +140,7 @@ def semester_hinzufuegen(studium: Studium):
         input(f'Es gibt bereits in Semester mit der Nummer {nummer}. [OK]')
         return
 
-    # Nächste freie ID aus Datenbank suchen
-    with Datenbank() as db:
-        naechste_id = db.naechste_id_finden('semester')
-
-    semester = Semester(id=naechste_id, nummer=nummer)
+    semester = Semester(nummer=nummer)
     studium.semester_hinzufuegen(semester=semester)
 
     # Semester in Datenbank hinzufügen
@@ -193,11 +189,7 @@ def modul_hinzufuegen(studium: Studium):
         input('Ungültige ETCs. [OK]')
         return
 
-    # Nächste freie ID aus Datenbank suchen
-    with Datenbank() as db:
-        naechste_id = db.naechste_id_finden('modul')
-
-    neues_modul = Modul(id=naechste_id, kuerzel=kuerzel, name=name, etcs=etcs)
+    neues_modul = Modul(kuerzel=kuerzel, name=name, etcs=etcs)
 
     print('\nNummer eingeben, zu welchem Semester das Modul hinzugefügt werden soll: ')
     for semester in studium.semester:
@@ -308,13 +300,13 @@ if __name__ == '__main__':
     # Semester aus Datenbank laden und zu Studium hinzufügen (Komposition)
     with Datenbank() as db:
         for semester in db.semester_laden():
-            neues_semester = Semester(id=semester['id'], nummer=semester['nummer'])
+            neues_semester = Semester(nummer=semester['nummer'])
             studium.semester_hinzufuegen(semester=neues_semester)
 
             # Module aus Datenbank laden und zu Semester hinzufügen (Komposition)
             with Datenbank() as db2:
                 for modul in db2.modul_laden(semester=neues_semester):
-                    neues_modul = Modul(id=modul['id'], kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
+                    neues_modul = Modul(kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
                     neues_semester.modul_hinzufuegen(modul=neues_modul)
 
                     # Prüfungen aus Datenbank laden und zu Modul zuweisen (Aggregation)

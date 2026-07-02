@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Optional, Any
+from typing import Optional
 
 from Studium import Studium
 from Semester import Semester
@@ -29,18 +29,6 @@ class Datenbank:
             self._connection.executescript('CREATE TABLE IF NOT EXISTS modul (id INTEGER PRIMARY KEY AUTOINCREMENT, semester_id INTEGER NOT NULL, kuerzel TEXT NOT NULL, name TEXT NOT NULL, etcs INTEGER NOT NULL, FOREIGN KEY (semester_id) REFERENCES semester(id) ON DELETE CASCADE);')
             self._connection.executescript('CREATE TABLE IF NOT EXISTS pruefung (id INTEGER PRIMARY KEY AUTOINCREMENT, modul_id INTEGER NOT NULL UNIQUE, note FLOAT(1,2) NOT NULL, FOREIGN KEY (modul_id) REFERENCES modul(id) ON DELETE CASCADE);')
 
-    def naechste_id_finden(self, tabelle: str) -> int:
-        """
-        Findet die höchste id einer Tabelle und gibt diese+1 zurück
-        Falls die Tabelle noch leer ist, wird 1 zurückgegeben
-        """
-        with self._connection:
-            id = self._connection.execute(f'SELECT seq + 1 AS id FROM sqlite_sequence WHERE name = "{tabelle}";').fetchone()
-            if id is not None:
-                return id['id']
-            return 1
-
-
     def studium_laden(self) -> Optional[Studium]:
         with self._connection:
             return self._connection.execute('SELECT * FROM studium').fetchone()
@@ -51,15 +39,15 @@ class Datenbank:
 
     def studium_aendern(self, studium: Studium) -> None:
         with self._connection:
-            self._connection.execute(f'UPDATE studium SET studiengang="{studium.studiengang}", hochschule="{studium.hochschule}", start_datum="{studium.start_datum}", geplantes_end_datum="{studium.geplantes_end_datum}" WHERE id = {studium.id};')
+            self._connection.execute(f'UPDATE studium SET studiengang="{studium.studiengang}", hochschule="{studium.hochschule}", start_datum="{studium.start_datum}", geplantes_end_datum="{studium.geplantes_end_datum}";')
 
     def semester_laden(self) -> Optional[list[Semester]]:
         with self._connection:
             return self._connection.execute('SELECT * FROM semester ORDER BY nummer').fetchall()
 
-    def semester_erstellen(self, studium: Studium, semester: Semester) -> None:
+    def semester_erstellen(self,  semester: Semester) -> None:
         with self._connection:
-            self._connection.execute(f'INSERT INTO semester (studium_id, nummer) VALUES ("{studium.id}", "{semester.nummer}");')
+            self._connection.execute(f'INSERT INTO semester (studium_id, nummer) VALUES (1, "{semester.nummer}");')
 
     def semester_loeschen(self, nummer: int) -> None:
         with self._connection:
@@ -67,24 +55,24 @@ class Datenbank:
 
     def modul_laden(self, semester: Semester) -> Optional[list[Modul]]:
         with self._connection:
-            return self._connection.execute(f'SELECT * FROM modul WHERE semester_id = "{semester.id}"').fetchall()
+            return self._connection.execute(f'SELECT * FROM modul WHERE semester_id = (SELECT id FROM semester WHERE nummer = {semester.nummer})').fetchall()
 
     def modul_erstellen(self, semester: Semester, modul: Modul) -> None:
         with self._connection:
-            self._connection.execute(f'INSERT INTO modul (semester_id, kuerzel, name, etcs) VALUES ("{semester.id}", "{modul.kuerzel}", "{modul.name}", "{modul.etcs}");')
+            self._connection.execute(f'INSERT INTO modul (semester_id, kuerzel, name, etcs) VALUES ((SELECT id FROM semester WHERE nummer = {semester.nummer}), "{modul.kuerzel}", "{modul.name}", "{modul.etcs}");')
 
     def modul_loeschen(self, modul: Modul) -> None:
         with self._connection:
-            self._connection.execute(f'DELETE FROM modul WHERE id = "{modul.id}";')
+            self._connection.execute(f'DELETE FROM modul WHERE id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')
 
     def pruefung_hinzufuegen(self, modul: Modul, pruefung: Pruefung) -> None:
         with self._connection:
-            self._connection.execute(f'INSERT INTO pruefung (modul_id, note) VALUES ("{modul.id}", "{pruefung.note}");')
+            self._connection.execute(f'INSERT INTO pruefung (modul_id, note) VALUES ((SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}"), "{pruefung.note}");')
 
     def pruefung_laden(self, modul: Modul) -> list[Pruefung]:
         with self._connection:
-            return self._connection.execute(f'SELECT * FROM pruefung WHERE modul_id = "{modul.id}"').fetchall()
+            return self._connection.execute(f'SELECT * FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}")').fetchall()
 
     def pruefung_loeschen(self, modul: Modul) -> None:
         with self._connection:
-            self._connection.execute(f'DELETE FROM pruefung WHERE modul_id = "{modul.id}";')
+            self._connection.execute(f'DELETE FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')

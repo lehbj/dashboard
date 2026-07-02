@@ -3,16 +3,11 @@ from Pruefung import Pruefung
 
 
 class Modul:
-    def __init__(self, id: int, kuerzel: str, name: str, etcs: int) -> None:
-        self._id: int = id
+    def __init__(self, kuerzel: str, name: str, etcs: int) -> None:
         self._kuerzel: str = kuerzel
         self._name: str = name
         self._etcs: int = etcs
         self._pruefung: Optional[Pruefung] = None # Komposition
-
-    @property
-    def id(self) -> int:
-        return self._id
 
     @property
     def kuerzel(self) -> str:

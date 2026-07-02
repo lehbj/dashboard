@@ -6,8 +6,7 @@ from Modul import Modul
 
 
 class Studium:
-    def __init__(self, id: int, studiengang: str, hochschule: str, start_datum: date, geplantes_end_datum: date) -> None:
-        self._id: int = id
+    def __init__(self, studiengang: str, hochschule: str, start_datum: date, geplantes_end_datum: date) -> None:
         self._studiengang: str = studiengang
         self._hochschule: str = hochschule
         self._start_datum: date = start_datum
@@ -17,10 +16,6 @@ class Studium:
     @property
     def semester(self) -> list[Semester]:
         return list(self._semester)
-
-    @property
-    def id(self) -> int:
-        return self._id
 
     @property
     def studiengang(self) -> str:
