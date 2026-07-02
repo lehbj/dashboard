@@ -317,7 +317,7 @@ if __name__ == '__main__':
                     neues_modul = Modul(id=modul['id'], kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
                     neues_semester.modul_hinzufuegen(modul=neues_modul)
 
-                    # Prüfungen aus Datenkbank laden und zu Modul zuweisen (Aggregation)
+                    # Prüfungen aus Datenbank laden und zu Modul zuweisen (Aggregation)
                     with Datenbank() as db3:
                         for pruefung in db3.pruefung_laden(modul=neues_modul):
                             neue_pruefung = Pruefung(note=pruefung['note'])
