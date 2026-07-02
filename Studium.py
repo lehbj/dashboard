@@ -3,6 +3,7 @@ from typing import Optional
 
 from Semester import Semester
 from Modul import Modul
+from StudiumService import StudiumService
 
 
 class Studium:
@@ -63,21 +64,6 @@ class Studium:
                 return semester
         return None
 
-    def get_gesamten_durchschnitt(self) -> None | float:
-        """
-        Berechnet den Gesamtdurchschnitt
-        Gibt None zurück, wenn noch keine Note vorhanden ist
-        """
-        alle_noten = []
-        for semester in self._semester:
-            for modul in semester.module:
-                note = modul.get_note()
-                if note is not None:
-                    alle_noten.append(note)
-        if not alle_noten:
-            return None
-        return round(sum(alle_noten) / len(alle_noten), 2)
-
     def get_modul(self, kuerzel: str) -> Optional[tuple[Semester, Modul]]:
         """
         Durchsucht alle Semester nach einem Modul mit dem gegebenen Kürze
@@ -90,14 +76,14 @@ class Studium:
         return None
 
     def __repr__(self) -> str:
+        service = StudiumService(studium=self)
         start_datum = self._start_datum.strftime('%d.%m.%Y')
         end_datum = self._geplantes_end_datum.strftime('%d.%m.%Y')
-        tage_uebrig = (self._geplantes_end_datum - date.today()).days
 
         return (
             f'Studiengang: {self._studiengang}\n'
             f'Hochschule: {self._hochschule}\n'
             f'Beginn: {start_datum}, '
             f'Geplantes Ende: {end_datum} '
-            f'(noch {tage_uebrig} Tage)'
+            f'(noch {service.tage_uebrig_berechnen()} Tage)'
         )
