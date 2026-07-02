@@ -1,4 +1,4 @@
-# Studiumsverwaltungs-Dashboard
+# Studium-Verwaltungs-Dashboard
 
 Ein objektorientiertes Konsolenprogramm zur Verwaltung und Auswertung von Studienleistungen. 
 Prüfungsergebnisse, Module und Semester werden in einer lokalen SQLite-Datenbank gespeichert.
@@ -24,7 +24,7 @@ cd dashboard
 
 ### 2. Abhängigkeiten installieren
 
-Zur Diagrammerstellung wird **matplotlib** verwendet. Falls es noch nich installiert ist, kann es mit pip installiert werden:
+Zur Diagrammerstellung wird **matplotlib** verwendet. Falls es noch nicht installiert ist, kann es mit pip installiert werden:
 
 ```bash
 pip install matplotlib

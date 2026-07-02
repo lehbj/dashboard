@@ -56,8 +56,8 @@ class Diagramm:
             # Beschriftung Punkte
             ax.annotate(f'{yi:.2f}', xy=(xi, yi), xytext=(0, 10), textcoords='offset points', ha='center', fontsize=10, color=farbe, fontweight='bold')
 
-        # Linie Bestehengrenze
-        ax.axhline(y=4.0, color='#e74c3c', alpha=0.5, label='Bestehengrenze (4.0)',)
+        # Linie Bestanden-Grenze
+        ax.axhline(y=4.0, color='#e74c3c', alpha=0.5, label='Bestanden-Grenze (4.0)',)
 
         # Linie Gesamtdurchschnitt
         gesamt = self._studium.get_gesamten_durchschnitt()
@@ -75,7 +75,7 @@ class Diagramm:
         ax.set_xlabel('Semester')
         ax.set_ylabel('Notenschnitt')
 
-        # Legende Bestehgrenze und Durchschnitt gesamt
+        # Legende Bestanden-Grenze und Durchschnitt gesamt
         ax.legend(loc='lower right')
 
         # Abstände optimieren und Ausgabe

@@ -15,7 +15,7 @@ def clear():
     sys.stdout.flush()
 
 def moduluebersicht(studium: Studium):
-    """Gint alle Module des übergebenen Studium-Objektes nach Semester sortiert aus"""
+    """Gibt alle Module des übergebenen Studium-Objektes nach Semester sortiert aus"""
     clear()
     for semester in studium.semester:
         print(f'Semester {semester.nummer}:')
@@ -77,7 +77,7 @@ def studiengang_aendern(studium: Studium):
 
 
 def hochschule_aendern(studium: Studium):
-    """Der Benutzer kann durch die Eingabeaufforderung den Namen der Hcohschule ändern"""
+    """Der Benutzer kann durch die Eingabeaufforderung den Namen der Hochschule ändern"""
     clear()
     hochschule = input('Name der neuen Hochschule: ')
 
