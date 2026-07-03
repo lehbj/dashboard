@@ -25,12 +25,12 @@ def moduluebersicht(studium: Studium):
 
 def studium_laden_oder_erstellen() -> Studium:
     """
-    In der Datenbank wird nach einem Studium gesucht
-    Wenn keines gefunden wird, wird der Benutzer dazu aufgefordert, ein neues zu erstellen
-    Wenn in der Datenbank bereits existiert wird daraus ein Studium-Objekt erstellt
+    In der Datenbank wird nach einem Studium gesucht.
+    Wenn keines gefunden wird, wird der Benutzer dazu aufgefordert, ein neues zu erstellen,
+    wenn in der Datenbank bereits existiert wird daraus ein Studium-Objekt erstellt.
     """
     with Datenbank() as db:
-        ergebnis = db.studium_laden()
+        ergebnis = db.read_one(query='SELECT * FROM studium')
 
     # Kein Studium in der Datenbank gefunden, neues erstellen
     if ergebnis is None:
@@ -56,7 +56,7 @@ def studium_laden_oder_erstellen() -> Studium:
         # Studium erstellen
         studium = Studium(studiengang=studiengang, hochschule=hochschule, start_datum=start_datum, geplantes_end_datum=geplantes_end_datum)
         with Datenbank() as db:
-            db.studium_erstellen(studium)
+            db.write(query=f'INSERT INTO studium (studiengang, hochschule, start_datum, geplantes_end_datum) VALUES ("{studium.studiengang}", "{studium.hochschule}", "{studium.start_datum}", "{studium.geplantes_end_datum}");')
         return studium
 
     # Bestehendes Studium aus der Datenbank laden
@@ -145,7 +145,7 @@ def semester_hinzufuegen(studium: Studium):
 
     # Semester in Datenbank hinzufügen
     with Datenbank() as db:
-        db.semester_erstellen(semester=semester)
+        db.write(query=f'INSERT INTO semester (studium_id, nummer) VALUES (1, "{semester.nummer}");')
 
 
 def semester_loeschen(studium: Studium):
@@ -164,7 +164,7 @@ def semester_loeschen(studium: Studium):
 
     # Aus Datenbank löschen
     with Datenbank() as db:
-        db.semester_loeschen(nummer=nummer)
+        db.write(query=f'DELETE FROM semester WHERE nummer = "{nummer}";')
 
     input(f'Semester mit der Nummer {nummer} wurde gelöscht.')
 
@@ -206,11 +206,12 @@ def modul_hinzufuegen(studium: Studium):
         return
 
     semester = studium.get_semester(nummer=gewaeltes_semester)
-    semester.modul_hinzufuegen(modul=neues_modul)
+    if semester is not None:
+        semester.modul_hinzufuegen(modul=neues_modul)
 
-    # Zu Datenbank hinzufügen
-    with Datenbank() as db:
-        db.modul_erstellen(semester=semester, modul=neues_modul)
+        # Zu Datenbank hinzufügen
+        with Datenbank() as db:
+            db.write(query=f'INSERT INTO modul (semester_id, kuerzel, name, etcs) VALUES ((SELECT id FROM semester WHERE nummer = {semester.nummer}), "{neues_modul.kuerzel}", "{neues_modul.name}", "{neues_modul.etcs}");')
 
 
 def modul_loeschen(studium: Studium):
@@ -231,7 +232,7 @@ def modul_loeschen(studium: Studium):
 
     # Aus Datenbank löschen
     with Datenbank() as db:
-        db.modul_loeschen(modul=modul)
+        db.write(query=f'DELETE FROM modul WHERE id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')
 
 
 def pruefung_hinzufuegen(studium: Studium):
@@ -265,7 +266,7 @@ def pruefung_hinzufuegen(studium: Studium):
 
     # In Datenbank speichern
     with Datenbank() as db:
-        db.pruefung_hinzufuegen(modul=modul, pruefung=pruefung)
+        db.write(query=f'INSERT INTO pruefung (modul_id, note) VALUES ((SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}"), "{pruefung.note}");')
 
 
 def pruefung_loeschen(studium: Studium):
@@ -281,7 +282,7 @@ def pruefung_loeschen(studium: Studium):
 
     semester, modul = ergebnis
 
-    # Bewertung nur löschen wenn Modul bewertet ist
+    # Bewertung nur löschen, wenn Modul bewertet ist
     if not modul.ist_bewertet():
         input(f'Prüfung konnte nicht gelöscht werden. Das Modul mit dem Kürzel "{kuerzel}" ist noch nicht bewertet worden. [OK]')
         return
@@ -291,7 +292,7 @@ def pruefung_loeschen(studium: Studium):
 
     # Aus Datenbank löschen
     with Datenbank() as db:
-        db.pruefung_loeschen(modul=modul)
+        db.write(query=f'DELETE FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')
 
 
 def main():
@@ -299,21 +300,27 @@ def main():
 
     # Semester aus Datenbank laden und zu Studium hinzufügen (Komposition)
     with Datenbank() as db:
-        for semester in db.semester_laden():
-            neues_semester = Semester(nummer=semester['nummer'])
-            studium.semester_hinzufuegen(semester=neues_semester)
+        semesters = db.read_all(query='SELECT * FROM semester ORDER BY nummer')
+        if semesters is not None:
+            for semester in semesters:
+                neues_semester = Semester(nummer=semester['nummer'])
+                studium.semester_hinzufuegen(semester=neues_semester)
 
-            # Module aus Datenbank laden und zu Semester hinzufügen (Komposition)
-            with Datenbank() as db2:
-                for modul in db2.modul_laden(semester=neues_semester):
-                    neues_modul = Modul(kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
-                    neues_semester.modul_hinzufuegen(modul=neues_modul)
+                # Module aus Datenbank laden und zu Semester hinzufügen (Komposition)
+                with Datenbank() as db2:
+                    module = db2.read_all(query=f'SELECT * FROM modul WHERE semester_id = (SELECT id FROM semester WHERE nummer = {neues_semester.nummer})')
+                    if module is not None:
+                        for modul in module:
+                            neues_modul = Modul(kuerzel=modul['kuerzel'], name=modul['name'], etcs=modul['etcs'])
+                            neues_semester.modul_hinzufuegen(modul=neues_modul)
 
-                    # Prüfungen aus Datenbank laden und zu Modul zuweisen (Aggregation)
-                    with Datenbank() as db3:
-                        for pruefung in db3.pruefung_laden(modul=neues_modul):
-                            neue_pruefung = Pruefung(note=pruefung['note'])
-                            neues_modul.pruefung_hinzufuegen(pruefung=neue_pruefung)
+                            # Prüfungen aus Datenbank laden und zu Modul zuweisen (Aggregation)
+                            with Datenbank() as db3:
+                                pruefungen = db3.read_all(query=f'SELECT * FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{neues_modul.kuerzel}")')
+                                if pruefungen is not None:
+                                    for pruefung in pruefungen:
+                                        neue_pruefung = Pruefung(note=pruefung['note'])
+                                        neues_modul.pruefung_hinzufuegen(pruefung=neue_pruefung)
 
     i = ''
     while i != '0':
