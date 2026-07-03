@@ -10,12 +10,12 @@ from Diagramm import Diagramm
 
 
 def clear():
-    """Leert das Konsolenfenster"""
+    """Leert das Konsolenfenster."""
     sys.stdout.write('\033[2J\033[H') # ANSI-Escape-Code zum Bildschirm leeren und Cursor an den Anfang setzen
     sys.stdout.flush()
 
 def moduluebersicht(studium: Studium):
-    """Gibt alle Module des übergebenen Studium-Objektes nach Semester sortiert aus"""
+    """Gibt alle Module des übergebenen Studium-Objektes nach Semester sortiert aus."""
     clear()
     for semester in studium.semester:
         print(f'Semester {semester.nummer}:')
@@ -64,7 +64,7 @@ def studium_laden_oder_erstellen() -> Studium:
 
 
 def studiengang_aendern(studium: Studium):
-    """Der Benutzer kann durch die Eingabeaufforderung den Namen des Studienganges ändern"""
+    """Der Benutzer kann durch die Eingabeaufforderung den Namen des Studienganges ändern."""
     clear()
     studiengang = input('Name des neuen Studienganges: ')
 
@@ -77,7 +77,7 @@ def studiengang_aendern(studium: Studium):
 
 
 def hochschule_aendern(studium: Studium):
-    """Der Benutzer kann durch die Eingabeaufforderung den Namen der Hochschule ändern"""
+    """Der Benutzer kann durch die Eingabeaufforderung den Namen der Hochschule ändern."""
     clear()
     hochschule = input('Name der neuen Hochschule: ')
 
@@ -90,7 +90,7 @@ def hochschule_aendern(studium: Studium):
 
 
 def startdatum_aendern(studium: Studium):
-    """Der Benutzer kann durch die Eingabeaufforderung das Startdatum des Studiums ändern"""
+    """Der Benutzer kann durch die Eingabeaufforderung das Startdatum des Studiums ändern."""
     clear()
     start_datum = input('Neues Startdatum eingeben (TT.MM.JJJJ): ')
 
@@ -109,7 +109,7 @@ def startdatum_aendern(studium: Studium):
 
 
 def enddatum_aendern(studium: Studium):
-    """Der Benutzer kann durch die Eingabeaufforderung das geplante Enddatum des Studiums ändern"""
+    """Der Benutzer kann durch die Eingabeaufforderung das geplante Enddatum des Studiums ändern."""
     clear()
     end_datum = input('Neues Enddatum eingeben (TT.MM.JJJJ): ')
 
@@ -128,7 +128,7 @@ def enddatum_aendern(studium: Studium):
 
 
 def semester_hinzufuegen(studium: Studium):
-    """Lässt den Benutzer eine Nummer eingeben, daraus wird ein Semester mit der Nummer erstellt"""
+    """Lässt den Benutzer eine Nummer eingeben, daraus wird ein Semester mit der Nummer erstellt."""
     try:
         nummer = int(input('Semesternummer eingeben: '))
     except ValueError:
@@ -149,7 +149,7 @@ def semester_hinzufuegen(studium: Studium):
 
 
 def semester_loeschen(studium: Studium):
-    """Ein Semester mit gewünschter Nummer kann gelöscht werden"""
+    """Ein Semester mit gewünschter Nummer kann gelöscht werden."""
     try:
         nummer = int(input('Semesternummer eingeben: '))
     except ValueError:
@@ -170,7 +170,7 @@ def semester_loeschen(studium: Studium):
 
 
 def modul_hinzufuegen(studium: Studium):
-    """Neues Modul mit gewünschten Eigenschaft wird erstellt"""
+    """Neues Modul mit gewünschten Eigenschaft wird erstellt."""
     clear()
     print('Neues Modul erstellen')
     kuerzel = input('Kürzel: ').upper()
@@ -215,7 +215,7 @@ def modul_hinzufuegen(studium: Studium):
 
 
 def modul_loeschen(studium: Studium):
-    """Modul mit gewünschten Kürzel löschen"""
+    """Modul mit gewünschten Kürzel löschen."""
     moduluebersicht(studium=studium)
 
     kuerzel = input('\nKürzel des zu löschenden Moduls eingeben: ').upper()
@@ -236,7 +236,7 @@ def modul_loeschen(studium: Studium):
 
 
 def pruefung_hinzufuegen(studium: Studium):
-    """Prüfungsergebnis zu Modul hinzufügen"""
+    """Prüfungsergebnis zu Modul hinzufügen."""
     moduluebersicht(studium=studium)
 
     kuerzel = input('\nKürzel des Moduls eingeben, bei welchem eine Prüfung hinzugefügt werden soll: ').upper()
@@ -270,7 +270,7 @@ def pruefung_hinzufuegen(studium: Studium):
 
 
 def pruefung_loeschen(studium: Studium):
-    """Prüfung von Modul mit gewünschtem Kürzel löschen"""
+    """Prüfung von Modul mit gewünschtem Kürzel löschen."""
     moduluebersicht(studium=studium)
 
     kuerzel = input('\nKürzel des Moduls eingeben, bei welchem die Prüfung gelöscht werden soll: ').upper()
