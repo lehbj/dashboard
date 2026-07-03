@@ -6,6 +6,7 @@ class StudiumService:
         self._studium = studium
 
     def tage_uebrig_berechnen(self) -> int:
+        """Berechnet die Anzahl der noch verbleibenden Tage bis zum geplanten Abschluss des Studiums."""
         return (self._studium.geplantes_end_datum - date.today()).days
 
     def gesamten_notendurchschnitt_berechnen(self) -> float | None:
