@@ -66,8 +66,8 @@ class Studium:
 
     def get_modul(self, kuerzel: str) -> Optional[tuple[Semester, Modul]]:
         """
-        Durchsucht alle Semester nach einem Modul mit dem gegebenen Kürze
-        Gibt ein Tupel (Semester, Modul) zurück, oder None, wenn nicht gefunden
+        Durchsucht alle Semester nach einem Modul mit dem gegebenen Kürze.
+        Gibt ein Tupel (Semester, Modul) zurück, oder None, wenn nicht gefunden.
         """
         for semester in self._semester:
             modul = semester.get_modul(kuerzel)

@@ -9,8 +9,8 @@ class StudiumService:
 
     def gesamten_notendurchschnitt_berechnen(self) -> float | None:
         """
-        Berechnet den Gesamtdurchschnitt
-        Gibt None zurück, wenn noch keine Note vorhanden ist
+        Berechnet den Gesamtdurchschnitt.
+        Gibt None zurück, wenn noch keine Note vorhanden ist.
         """
         alle_noten = []
         for semester in self._studium.semester:

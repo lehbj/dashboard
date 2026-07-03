@@ -26,8 +26,8 @@ class Semester:
 
     def get_noten_durchschnitt(self) -> Optional[float]:
         """
-        Berechnet den Notendurchschnitt aller bewerteten Module
-        Gibt None zurück, wenn noch kein Modul bewertet wurde
+        Berechnet den Notendurchschnitt aller bewerteten Module.
+        Gibt None zurück, wenn noch kein Modul bewertet wurde.
         """
         noten = [m.get_note() for m in self._module if m.ist_bewertet()]
         if not noten:
