@@ -1,4 +1,5 @@
 from datetime import date
+
 from rich.console import Console
 
 from Datenbank import Datenbank

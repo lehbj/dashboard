@@ -46,7 +46,6 @@ class Konsole:
         self._studium = studium
         self._service = service
 
-
     def _studium_ausgeben(self, titel: str):
         """Gibt eine Tabelle mit Informationen zum Studium aus."""
         table = Table(title=titel)
@@ -410,4 +409,3 @@ class Konsole:
             elif eingabe_hauptmenue == '5':  # Notenübersicht
                 diagramm = Diagramm(studium=self._studium)
                 diagramm.notenuebersicht()
-

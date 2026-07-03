@@ -3,7 +3,6 @@ from typing import Optional
 
 from Modul import Modul
 from Semester import Semester
-from StudiumService import StudiumService
 
 
 class Studium:
