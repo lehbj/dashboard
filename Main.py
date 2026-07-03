@@ -294,7 +294,7 @@ def pruefung_loeschen(studium: Studium):
         db.pruefung_loeschen(modul=modul)
 
 
-if __name__ == '__main__':
+def main():
     studium = studium_laden_oder_erstellen()
 
     # Semester aus Datenbank laden und zu Studium hinzufügen (Komposition)
@@ -401,3 +401,6 @@ if __name__ == '__main__':
         elif i == '5': # Notenübersicht
             diagramm = Diagramm(studium=studium)
             diagramm.notenuebersicht()
+
+if __name__ == '__main__':
+    main()
