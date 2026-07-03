@@ -6,7 +6,7 @@ from Modul import Modul
 class Semester:
     def __init__(self, nummer: int):
         self._nummer: int = nummer
-        self._module: list[Modul] = [] # Komposition
+        self._module: list[Modul] = []  # Komposition
 
     @property
     def nummer(self) -> int:

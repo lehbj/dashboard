@@ -12,15 +12,15 @@ class Diagramm:
     def _notenfarbe(note: float) -> str:
         """Gibt je nach Note eine entsprechende Farbe zurück."""
         if note <= 1.5:
-            return '#2ecc71' # Grün
+            return '#2ecc71'  # Grün
         elif note <= 2.5:
-            return '#3498db' # Blau
+            return '#3498db'  # Blau
         elif note <= 3.5:
-            return '#f39c12' # Orange
+            return '#f39c12'  # Orange
         elif note <= 4.0:
-            return '#e67e22' # Dunkelorange
+            return '#e67e22'  # Dunkelorange
         else:
-            return '#e74c3c' # Rot
+            return '#e74c3c'  # Rot
 
     def notenuebersicht(self) -> None:
         """Notendiagramm erstellen und anzeigen."""
@@ -58,12 +58,12 @@ class Diagramm:
             ax.annotate(f'{yi:.2f}', xy=(xi, yi), xytext=(0, 10), textcoords='offset points', ha='center', fontsize=10, color=farbe, fontweight='bold')
 
         # Linie Bestanden-Grenze
-        ax.axhline(y=4.0, color='#e74c3c', alpha=0.5, label='Bestanden-Grenze (4.0)',)
+        ax.axhline(y=4.0, color='#e74c3c', alpha=0.5, label='Bestanden-Grenze (4.0)', )
 
         # Linie Gesamtdurchschnitt
         service = StudiumService(studium=self._studium)
         gesamt = service.gesamten_notendurchschnitt_berechnen()
-        ax.axhline(y=gesamt, color='#7f8c8d', linewidth=1.2, linestyle=':',  alpha=0.5, label=f'Ø Gesamt: {gesamt:.2f}')
+        ax.axhline(y=gesamt, color='#7f8c8d', linewidth=1.2, linestyle=':', alpha=0.5, label=f'Ø Gesamt: {gesamt:.2f}')
 
         # Invertieren, Abstände anpassen
         ax.set_ylim(5.2, 0.7)

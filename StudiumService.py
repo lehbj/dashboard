@@ -1,5 +1,6 @@
 from datetime import date
 
+
 class StudiumService:
     def __init__(self, studium) -> None:
         self._studium = studium

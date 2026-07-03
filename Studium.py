@@ -1,8 +1,8 @@
 from datetime import date
 from typing import Optional
 
-from Semester import Semester
 from Modul import Modul
+from Semester import Semester
 from StudiumService import StudiumService
 
 

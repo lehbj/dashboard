@@ -1,6 +1,6 @@
 # Studium-Verwaltungs-Dashboard
 
-Ein objektorientiertes Konsolenprogramm zur Verwaltung und Auswertung von Studienleistungen. 
+Ein objektorientiertes Konsolenprogramm zur Verwaltung und Auswertung von Studienleistungen.
 Prüfungsergebnisse, Module und Semester werden in einer lokalen SQLite-Datenbank gespeichert.
 Der Notenverlauf kann als Diagramm visualisiert werden.
 
@@ -42,7 +42,8 @@ Die SQLite-Datenbank (`studiumsverwaltung.db`) wird beim ersten Start automatisc
 
 ## Bedienung
 
-Das Programm wird vollständig über ein Konsolenmenü gesteuert. Einfach die gewünschte Zahl über die Eingabeaufforderung eingeben und mit Enter bestätigen.
+Das Programm wird vollständig über ein Konsolenmenü gesteuert. Einfach die gewünschte Zahl über die Eingabeaufforderung
+eingeben und mit Enter bestätigen.
 
 ### Datumseingabe
 

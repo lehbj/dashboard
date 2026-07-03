@@ -1,18 +1,19 @@
-from datetime import date
 import sys
+from datetime import date
 
-from Studium import Studium
-from Semester import Semester
-from Modul import Modul
-from Pruefung import Pruefung
 from Datenbank import Datenbank
 from Diagramm import Diagramm
+from Modul import Modul
+from Pruefung import Pruefung
+from Semester import Semester
+from Studium import Studium
 
 
 def clear():
     """Leert das Konsolenfenster."""
-    sys.stdout.write('\033[2J\033[H') # ANSI-Escape-Code zum Bildschirm leeren und Cursor an den Anfang setzen
+    sys.stdout.write('\033[2J\033[H')  # ANSI-Escape-Code zum Bildschirm leeren und Cursor an den Anfang setzen
     sys.stdout.flush()
+
 
 def moduluebersicht(studium: Studium):
     """Gibt alle Module des übergebenen Studium-Objektes nach Semester sortiert aus."""
@@ -335,7 +336,7 @@ def main():
         print('[0] - Beenden\n')
         i = input()
 
-        if i == '1': # Studium bearbeiten
+        if i == '1':  # Studium bearbeiten
             j = ''
             while j != '0':
                 clear()
@@ -348,16 +349,16 @@ def main():
                 print('[0] - Zurück\n')
                 j = input()
 
-                if j == '1': # Studiengang ändern
+                if j == '1':  # Studiengang ändern
                     studiengang_aendern(studium=studium)
-                elif j == '2': # Hochschule ändern
+                elif j == '2':  # Hochschule ändern
                     hochschule_aendern(studium=studium)
-                elif j == '3': # Startdatum ändern
+                elif j == '3':  # Startdatum ändern
                     startdatum_aendern(studium=studium)
-                elif j == '4': # Enddatum ändern
+                elif j == '4':  # Enddatum ändern
                     enddatum_aendern(studium=studium)
 
-        elif i == '2': # Semester verwalten
+        elif i == '2':  # Semester verwalten
             j = ''
             while j != '0':
                 clear()
@@ -370,12 +371,12 @@ def main():
                 print('[0] - Zurück\n')
                 j = input()
 
-                if j == '1': # Semester hinzufügen
+                if j == '1':  # Semester hinzufügen
                     semester_hinzufuegen(studium=studium)
-                elif j == '2': # Semester löschen
+                elif j == '2':  # Semester löschen
                     semester_loeschen(studium=studium)
 
-        elif i == '3': # Module verwalten
+        elif i == '3':  # Module verwalten
             j = ''
             while j != '0':
                 # Module verwalten Menü
@@ -385,12 +386,12 @@ def main():
                 print('[0] - Zurück\n')
                 j = input()
 
-                if j == '1': # Modul hinzufügen
+                if j == '1':  # Modul hinzufügen
                     modul_hinzufuegen(studium=studium)
-                elif j == '2': # Modul löschen
+                elif j == '2':  # Modul löschen
                     modul_loeschen(studium=studium)
 
-        elif i == '4': # Prüfungen verwalten
+        elif i == '4':  # Prüfungen verwalten
             j = ''
             while j != '0':
                 # Prüfungen verwalten Menü
@@ -400,14 +401,15 @@ def main():
                 print('[0] - Zurück\n')
                 j = input()
 
-                if j == '1': # Prüfung hinzufügen
+                if j == '1':  # Prüfung hinzufügen
                     pruefung_hinzufuegen(studium=studium)
-                elif j == '2': # Prüfung löschen
+                elif j == '2':  # Prüfung löschen
                     pruefung_loeschen(studium=studium)
 
-        elif i == '5': # Notenübersicht
+        elif i == '5':  # Notenübersicht
             diagramm = Diagramm(studium=studium)
             diagramm.notenuebersicht()
+
 
 if __name__ == '__main__':
     main()

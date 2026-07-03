@@ -1,4 +1,5 @@
 from typing import Optional
+
 from Pruefung import Pruefung
 
 
@@ -7,7 +8,7 @@ class Modul:
         self._kuerzel: str = kuerzel
         self._name: str = name
         self._etcs: int = etcs
-        self._pruefung: Optional[Pruefung] = None # Komposition
+        self._pruefung: Optional[Pruefung] = None  # Komposition
 
     @property
     def kuerzel(self) -> str:
@@ -20,7 +21,7 @@ class Modul:
     @property
     def etcs(self) -> int:
         return self._etcs
-    
+
     @property
     def pruefung(self) -> Optional[Pruefung]:
         return self._pruefung
