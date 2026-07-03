@@ -24,6 +24,13 @@ def moduluebersicht(studium: Studium):
             print(modul)
 
 
+def studium_speichern(studium: Studium) -> None:
+    """Speichert Studium-Objekt in der Datenbank."""
+    with Datenbank() as db:
+        db.write(
+            query=f'UPDATE studium SET studiengang="{studium.studiengang}", hochschule="{studium.hochschule}", start_datum="{studium.start_datum}", geplantes_end_datum="{studium.geplantes_end_datum}";')
+
+
 def studium_laden_oder_erstellen() -> Studium:
     """
     In der Datenbank wird nach einem Studium gesucht.
@@ -73,8 +80,7 @@ def studiengang_aendern(studium: Studium):
     input(f'Studiengang zu "{studiengang}" geändert. [OK]')
 
     # Änderung in Datenbank speichern
-    with Datenbank() as db:
-        db.studium_aendern(studium)
+    studium_speichern(studium=studium)
 
 
 def hochschule_aendern(studium: Studium):
@@ -86,8 +92,7 @@ def hochschule_aendern(studium: Studium):
     input(f'Hochschule zu "{hochschule}" geändert. [OK]')
 
     # Änderung in Datenbank speichern
-    with Datenbank() as db:
-        db.studium_aendern(studium)
+    studium_speichern(studium=studium)
 
 
 def startdatum_aendern(studium: Studium):
@@ -105,8 +110,7 @@ def startdatum_aendern(studium: Studium):
     input(f'Startdatum zum {start_datum.strftime('%d.%m.%Y')} geändert. [OK]')
 
     # Änderung in Datenbank speichern
-    with Datenbank() as db:
-        db.studium_aendern(studium)
+    studium_speichern(studium=studium)
 
 
 def enddatum_aendern(studium: Studium):
@@ -124,8 +128,7 @@ def enddatum_aendern(studium: Studium):
     input(f'Enddatum zum {end_datum.strftime('%d.%m.%Y')} geändert. [OK]')
 
     # Änderung in Datenbank speichern
-    with Datenbank() as db:
-        db.studium_aendern(studium)
+    studium_speichern(studium=studium)
 
 
 def semester_hinzufuegen(studium: Studium):

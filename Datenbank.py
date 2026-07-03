@@ -1,10 +1,8 @@
 import sqlite3
 
-from Studium import Studium
-
 
 class Datenbank:
-    def __init__(self, pfad: str='dashboard.db') -> None:
+    def __init__(self, pfad: str = 'dashboard.db') -> None:
         self._pfad = pfad
         self._connection: sqlite3.Connection = sqlite3.connect(pfad)
         self._connection.row_factory = sqlite3.Row  # Zugriff per Spaltenname
@@ -40,10 +38,3 @@ class Datenbank:
         """
         with self._connection:
             self._connection.execute(query)
-
-    def studium_aendern(self, studium: Studium) -> None:
-        """
-        Speichert Studium-Objekt in der Datenbank.
-        Extra-Methode, weil es mehrere Aufrufe gibt.
-        """
-        self.write(f'UPDATE studium SET studiengang="{studium.studiengang}", hochschule="{studium.hochschule}", start_datum="{studium.start_datum}", geplantes_end_datum="{studium.geplantes_end_datum}";')
