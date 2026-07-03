@@ -1,4 +1,6 @@
 from typing import Optional
+from rich.console import Console
+from rich.table import Table
 
 from Modul import Modul
 
@@ -40,10 +42,3 @@ class Semester:
             if modul.kuerzel == kuerzel:
                 return modul
         return None
-
-    def __repr__(self) -> str:
-        return (
-            f'Semester {self._nummer}: '
-            f'({len(self._module)} Module) '
-            f'Durchschnitt: {self.get_noten_durchschnitt()}'
-        )

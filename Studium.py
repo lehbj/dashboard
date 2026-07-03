@@ -74,16 +74,3 @@ class Studium:
             if modul is not None:
                 return semester, modul
         return None
-
-    def __repr__(self) -> str:
-        service = StudiumService(studium=self)
-        start_datum = self._start_datum.strftime('%d.%m.%Y')
-        end_datum = self._geplantes_end_datum.strftime('%d.%m.%Y')
-
-        return (
-            f'Studiengang: {self._studiengang}\n'
-            f'Hochschule: {self._hochschule}\n'
-            f'Beginn: {start_datum}, '
-            f'Geplantes Ende: {end_datum} '
-            f'(noch {service.tage_uebrig_berechnen()} Tage)'
-        )

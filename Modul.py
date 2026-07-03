@@ -53,8 +53,3 @@ class Modul:
         if self.ist_bewertet():
             return self.get_note() <= 4.0
         return False
-
-    def __repr__(self) -> str:
-        return (
-            f'[{self.kuerzel}] {self._name} ({self._etcs} ETCS) Note: {self.get_note()}, Bestanden: {self.ist_bestanden()}'
-        )
