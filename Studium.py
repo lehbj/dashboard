@@ -72,7 +72,7 @@ class Studium:
         for semester in self._semester:
             modul = semester.get_modul(kuerzel)
             if modul is not None:
-                return (semester, modul)
+                return semester, modul
         return None
 
     def __repr__(self) -> str:
