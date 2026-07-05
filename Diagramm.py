@@ -5,8 +5,9 @@ from StudiumService import StudiumService
 
 
 class Diagramm:
-    def __init__(self, studium: Studium) -> None:
+    def __init__(self, studium: Studium, service: StudiumService) -> None:
         self._studium = studium
+        self._service = service
 
     @staticmethod
     def _notenfarbe(note: float) -> str:
@@ -61,8 +62,7 @@ class Diagramm:
         ax.axhline(y=4.0, color='#e74c3c', alpha=0.5, label='Bestanden-Grenze (4.0)', )
 
         # Linie Gesamtdurchschnitt
-        service = StudiumService(studium=self._studium)
-        gesamt = service.gesamten_notendurchschnitt_berechnen()
+        gesamt = self._service.gesamten_notendurchschnitt_berechnen()
         ax.axhline(y=gesamt, color='#7f8c8d', linewidth=1.2, linestyle=':', alpha=0.5, label=f'Ø Gesamt: {gesamt:.2f}')
 
         # Invertieren, Abstände anpassen

@@ -417,5 +417,5 @@ class Konsole:
                         self._pruefung_loeschen()
 
             elif eingabe_hauptmenue == '5':  # Notenübersicht
-                diagramm = Diagramm(studium=self._studium)
+                diagramm = Diagramm(studium=self._studium, service=self._service)
                 diagramm.notenuebersicht()
