@@ -1,5 +1,6 @@
 from datetime import date
 
+from pyparsing import Empty
 from rich.console import Console
 from rich.table import Table
 
@@ -212,6 +213,10 @@ class Konsole:
 
     def _modul_hinzufuegen(self):
         """Neues Modul mit gewünschten Eigenschaft wird erstellt."""
+        if not self._studium.semester: # Noch keine Semester erstellt
+            input('Erstelle erst ein Semester um ein Modul erstellen zu können. [OK]')
+            return
+
         print('Neues Modul erstellen')
         kuerzel = input('Kürzel: ').upper()
 
@@ -221,27 +226,29 @@ class Konsole:
             return
 
         name = input('Name: ')
-        etcs = input('ETCs: ')
 
-        try:
-            etcs = int(etcs)
-        except ValueError:
-            input('Ungültige ETCs. [OK]')
-            return
+        while True:
+            etcs = input('ETCs: ')
+            try:
+                etcs = int(etcs)
+                break
+            except ValueError:
+                print('Ungültige ETCs. Muss eine ganze Zahl sein.')
 
         neues_modul = Modul(kuerzel=kuerzel, name=name, etcs=etcs)
 
-        print('\nNummer eingeben, zu welchem Semester das Modul hinzugefügt werden soll: ')
+        print('\nNummer des Semesters eingeben, zu welchem das Modul hinzugefügt werden soll: ')
 
-        try:
-            gewaeltes_semester = int(input())
-        except ValueError:
-            input('Ungültige Nummer. [OK]')
-            return
+        while True:
+            try:
+                gewaeltes_semester = int(input())
 
-        if self._studium.get_semester(nummer=gewaeltes_semester) is None:
-            input('Gewähltes Semester existiert nicht. [OK]')
-            return
+                if self._studium.get_semester(nummer=gewaeltes_semester) is None:
+                    print(f'Es existiert kein Semester mit der Nummer {gewaeltes_semester}.')
+                else:
+                    break
+            except ValueError:
+                print('Ungültige Nummer.')
 
         semester = self._studium.get_semester(nummer=gewaeltes_semester)
         if semester is not None:
@@ -249,8 +256,7 @@ class Konsole:
 
             # Zu Datenbank hinzufügen
             with Datenbank() as db:
-                db.write(
-                    query=f'INSERT INTO modul (semester_id, kuerzel, name, etcs) VALUES ((SELECT id FROM semester WHERE nummer = {semester.nummer}), "{neues_modul.kuerzel}", "{neues_modul.name}", "{neues_modul.etcs}");')
+                db.write(query=f'INSERT INTO modul (semester_id, kuerzel, name, etcs) VALUES ((SELECT id FROM semester WHERE nummer = {semester.nummer}), "{neues_modul.kuerzel}", "{neues_modul.name}", "{neues_modul.etcs}");')
 
     def _modul_loeschen(self):
         """Modul mit gewünschten Kürzel löschen."""
@@ -299,8 +305,7 @@ class Konsole:
 
         # In Datenbank speichern
         with Datenbank() as db:
-            db.write(
-                query=f'INSERT INTO pruefung (modul_id, note) VALUES ((SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}"), "{pruefung.note}");')
+            db.write(query=f'INSERT INTO pruefung (modul_id, note) VALUES ((SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}"), "{pruefung.note}");')
 
     def _pruefung_loeschen(self):
         """Prüfung von Modul mit gewünschtem Kürzel löschen."""
@@ -324,8 +329,7 @@ class Konsole:
 
         # Aus Datenbank löschen
         with Datenbank() as db:
-            db.write(
-                query=f'DELETE FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')
+            db.write(query=f'DELETE FROM pruefung WHERE modul_id = (SELECT id FROM modul WHERE kuerzel = "{modul.kuerzel}");')
 
     def menu(self):
         """Regelt Benutzereingabe in Haupt- und Untermenüs."""
