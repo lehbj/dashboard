@@ -32,5 +32,4 @@ class StudiumService:
     def studium_speichern(self) -> None:
         """Speichert Studium-Objekt in der Datenbank."""
         with Datenbank() as db:
-            db.write(
-                query=f'UPDATE studium SET studiengang="{self._studium.studiengang}", hochschule="{self._studium.hochschule}", start_datum="{self._studium.start_datum}", geplantes_end_datum="{self._studium.geplantes_end_datum}";')
+            db.write(query=f'UPDATE studium SET studiengang="{self._studium.studiengang}", hochschule="{self._studium.hochschule}", start_datum="{self._studium.start_datum}", geplantes_end_datum="{self._studium.geplantes_end_datum}";')
