@@ -11,6 +11,8 @@ from Semester import Semester
 from Studium import Studium
 from StudiumService import StudiumService
 
+import os
+
 
 def studium_erstellen() -> Studium:
     studiengang = input('Kein Studium gefunden. Um ein neues zu erstellen, Name des Studienganges eingeben: ')
@@ -46,6 +48,12 @@ class Konsole:
         self._studium = studium
         self._service = service
 
+    def _clear(self):
+        if os.name == 'nt':
+            os.system("cls")
+        else:
+            self._console.clear()
+
     def _studium_ausgeben(self, titel: str):
         """Gibt eine Tabelle mit Informationen zum Studium aus."""
         table = Table(title=titel)
@@ -65,7 +73,7 @@ class Konsole:
             str(self._service.gesamten_notendurchschnitt_berechnen() if self._service.gesamten_notendurchschnitt_berechnen() is not None else '-'),
         )
 
-        self._console.clear()
+        self._clear()
         self._console.print(table)
 
     def _semester_ausgeben(self):
@@ -82,7 +90,7 @@ class Konsole:
                 str(semester.get_noten_durchschnitt() if semester.get_noten_durchschnitt() is not None else '-'),
             )
 
-        self._console.clear()
+        self._clear()
         self._console.print(table)
 
     def _module_ausgeben(self, titel: str):
@@ -107,7 +115,7 @@ class Konsole:
                     'Ja' if modul.ist_bestanden() else 'Nein'
                 )
 
-        self._console.clear()
+        self._clear()
         self._console.print(table)
 
     def _studiengang_aendern(self):
