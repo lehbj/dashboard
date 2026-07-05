@@ -1,6 +1,6 @@
+import os
 from datetime import date
 
-from pyparsing import Empty
 from rich.console import Console
 from rich.table import Table
 
@@ -11,8 +11,6 @@ from Pruefung import Pruefung
 from Semester import Semester
 from Studium import Studium
 from StudiumService import StudiumService
-
-import os
 
 
 def studium_erstellen() -> Studium:
